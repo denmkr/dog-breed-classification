@@ -1,0 +1,50 @@
+load('../app/models/inceptionresnet.mat', 'net');
+
+disp(net.Layers);
+
+% show original image
+image = imread('dog.jpg');
+imshow(image);
+
+%show resized image
+figure;
+image = imresize(image, net.Layers(1).InputSize(1:2));
+imshow(image);
+
+figure;
+act1 = activations(net, image, 'conv2d_1');
+sz = size(act1);
+act1 = reshape(act1,[sz(1) sz(2) 1 sz(3)]);
+I = imtile(mat2gray(act1),'GridSize',[4 8]);
+imshow(I);
+
+figure;
+act1 = activations(net, image, 'conv2d_3');
+sz = size(act1);
+act1 = reshape(act1,[sz(1) sz(2) 1 sz(3)]);
+I = imtile(mat2gray(act1),'GridSize',[8 8]);
+imshow(I);
+
+figure;
+act1 = activations(net, image, 'conv2d_24');
+sz = size(act1);
+act1 = reshape(act1,[sz(1) sz(2) 1 sz(3)]);
+I = imtile(mat2gray(act1),'GridSize',[8 8]);
+imshow(I);
+
+figure;
+act1 = activations(net, image, 'conv2d_88');
+sz = size(act1);
+act1 = reshape(act1,[sz(1) sz(2) 1 sz(3)]);
+I = imtile(mat2gray(act1),'GridSize',[16 12]);
+imshow(I);
+
+figure;
+act1 = activations(net, image, 'conv2d_202');
+sz = size(act1);
+act1 = reshape(act1,[sz(1) sz(2) 1 sz(3)]);
+I = imtile(mat2gray(act1),'GridSize',[16 14]);
+imshow(I);
+
+
+
