@@ -20,15 +20,37 @@ inputSize = [224 224 3];
 augImgDataTrain = augmentImages(imgDataTrain, inputSize);
 imgDataTest.ReadFcn = @(loc)imresize(imread(loc), inputSize(1:2));
 
-splitRatio = 0.5;
-[imgDataValidation, imgDataTest] = splitEachLabel(imgDataTest, splitRatio, 'randomize');
-
 %% Constructing network
  
 layers = [
     imageInputLayer(inputSize)
  
+    % 8 filters with 3x3 size using padding so that size[output] = [input]  
+    convolution2dLayer(2, 32, 'Padding', 'same')
+    batchNormalizationLayer
+    reluLayer
+ 
+    maxPooling2dLayer(2, 'Stride', 2)
+ 
+    convolution2dLayer(2, 64, 'Padding', 'same')
+    batchNormalizationLayer
+    reluLayer
+ 
+    maxPooling2dLayer(2, 'Stride', 2)
+ 
+    convolution2dLayer(2, 128, 'Padding', 'same')
+    batchNormalizationLayer
+    reluLayer
     
+    maxPooling2dLayer(2, 'Stride', 2)
+ 
+    convolution2dLayer(2, 256, 'Padding', 'same')
+    batchNormalizationLayer
+    reluLayer
+    
+    maxPooling2dLayer(2, 'Stride', 2)
+ 
+    fullyConnectedLayer(256)
     fullyConnectedLayer(120)
     softmaxLayer
     classificationLayer
@@ -37,11 +59,11 @@ layers = [
 %% Training network
  
 learningRate = 0.001;
-maxEpochs = 1;
-miniBatchSize = 1;
+maxEpochs = 50;
+miniBatchSize = 256;
 
 % trainNet.m
-net = trainNet(augImgDataTrain, imgDataValidation, layers, learningRate, maxEpochs, miniBatchSize);
+net = trainNet(augImgDataTrain, imgDataTest, layers, learningRate, maxEpochs, miniBatchSize);
  
 %% Testing network
 
@@ -51,6 +73,3 @@ net = trainNet(augImgDataTrain, imgDataValidation, layers, learningRate, maxEpoc
 % testNet.m
 accuracy = testNet(net, imgDataTest);
 disp("Accuracy:" + accuracy);
- 
-
-
