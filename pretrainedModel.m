@@ -12,10 +12,10 @@ imgData = createImageDatastore();
 %% Getting and transforming network
 
 % Choosing pretrained model:
-% net = alexnet;
+net = alexnet;
 % net = googlenet;
 % net = resnet50;
-net = inceptionresnetv2;
+% net = inceptionresnetv2;
 classesNum = numel(categories(imgData.Labels));
 
 % replaceLayers.m

@@ -43,6 +43,22 @@ else
 end
 % End initialization code - DO NOT EDIT
 
+% Loading models
+global customnet alexnet googlenet resnet inceptionresnet currentNet;
+
+load('./models/customnet.mat', 'net');
+customnet = net;
+load('./models/alexnet.mat', 'net');
+alexnet = net;
+load('./models/googlenet.mat', 'net');
+googlenet = net;
+load('./models/resnet.mat', 'net');
+resnet = net;
+load('./models/inceptionresnet.mat', 'net');
+inceptionresnet = net;
+
+currentNet = inceptionresnet;
+
 
 % --- Executes just before windowapp is made visible.
 function windowapp_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -60,23 +76,6 @@ guidata(hObject, handles);
 
 % UIWAIT makes windowapp wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
-
-
-% Loading models
-global customnet alexnet googlenet resnet inceptionresnet currentNet;
-
-load('./models/customnet.mat', 'net');
-customnet = net;
-load('./models/alexnet.mat', 'net');
-alexnet = net;
-load('./models/googlenet.mat', 'net');
-googlenet = net;
-load('./models/resnet.mat', 'net');
-resnet = net;
-load('./models/inceptionresnet.mat', 'net');
-inceptionresnet = net;
-
-currentNet = inceptionresnet;
 
 
 % --- Outputs from this function are returned to the command line.
