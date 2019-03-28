@@ -43,6 +43,15 @@ else
 end
 % End initialization code - DO NOT EDIT
 
+
+% --- Executes just before windowapp is made visible.
+function windowapp_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to windowapp (see VARARGIN)
+
 % Loading models
 global customnet alexnet googlenet resnet inceptionresnet currentNet;
 
@@ -58,15 +67,6 @@ load('./models/inceptionresnet.mat', 'net');
 inceptionresnet = net;
 
 currentNet = inceptionresnet;
-
-
-% --- Executes just before windowapp is made visible.
-function windowapp_OpeningFcn(hObject, eventdata, handles, varargin)
-% This function has no output args, see OutputFcn.
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to windowapp (see VARARGIN)
 
 % Choose default command line output for windowapp
 handles.output = hObject;
@@ -93,6 +93,8 @@ varargout{1} = handles.output;
 function uploadbutton_Callback(hObject, eventdata, handles)
    global image;
 
+   infoText = findobj(0, 'tag', 'infoText');  
+   set(infoText, 'string', "Please wait for file uploading window ...");
    [file, path] = uigetfile('*.jpg');  %open a mat file
    if ~(file == "")
        axes1 = findobj(0, 'tag', 'axes1');       
@@ -102,14 +104,37 @@ function uploadbutton_Callback(hObject, eventdata, handles)
        image = imread([path,file]);
    end
    
+   set(infoText, 'string', "Please choose model for classifying");
+   
 
 % --- Executes on button press in pushbutton2.
 function pushbutton2_Callback(hObject, eventdata, handles)
 
-    global currentNet image;
+    global customnet alexnet googlenet resnet inceptionresnet currentNet image;
+    
+    infoText = findobj(0, 'tag', 'infoText');  
+    set(infoText, 'string', "Please wait for models loading ...");
+    if isempty(currentNet)
+        
+        % Loading models
+        load('./models/customnet.mat', 'net');
+        customnet = net;
+        load('./models/alexnet.mat', 'net');
+        alexnet = net;
+        load('./models/googlenet.mat', 'net');
+        googlenet = net;
+        load('./models/resnet.mat', 'net');
+        resnet = net;
+        load('./models/inceptionresnet.mat', 'net');
+        inceptionresnet = net;
+
+        currentNet = inceptionresnet;
+    end
+    
+    set(infoText, 'string', "Please wait for classifying ...");
     
     if ~isempty(image)
-    
+        
         resized_image = imresize(image, currentNet.Layers(1).InputSize(1:2));
         [~, scores] = classify(currentNet, resized_image);
 
@@ -140,6 +165,8 @@ function pushbutton2_Callback(hObject, eventdata, handles)
             sprintf("%s", result4));
         
     end
+    
+    set(infoText, 'string', "");
 
     
 % --- Executes on button press in radiobutton1.
