@@ -1,3 +1,5 @@
+# Dog Breed Classification
+
 All dataset is located in dog-breed-identification/train directory. Initially we run a function that divides all images in this directory into different directories based on its label.
 
 1. modelFromScratch.m is a file for creating custom model from scratch
